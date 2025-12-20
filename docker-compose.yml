@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_KEY=${APP_KEY:-base64:generateMeLocally}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=${DB_HOST:-db}  # Utilise la variable ou 'db' en local
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_DATABASE=${DB_DATABASE:-gardena_local}
+      - DB_USERNAME=${DB_USERNAME:-gardena_local}
+      - DB_PASSWORD=${DB_PASSWORD:-local_password}
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    depends_on:
+      - db
+    networks:
+      - gardena-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-gardena_local}
+      - POSTGRES_USER=${POSTGRES_USER:-gardena_local}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-local_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - gardena-network
+
+networks:
+  gardena-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

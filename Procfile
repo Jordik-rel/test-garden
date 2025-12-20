@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-apache2 public/
+web: docker run -p $PORT:80 -e PORT=$PORT mygardena-app

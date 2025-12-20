@@ -1,13 +1,17 @@
 services:
   - type: web
-    name: votre-app-laravel
-    env: php
-    buildCommand: "./render_build.sh"
-    startCommand: "php artisan serve --host=0.0.0.0 --port=${PORT}"
+    name: mygardena-app
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
       - key: APP_KEY
-        generateValue: true
+        sync: false
+      - key: DB_CONNECTION
+        fromDatabase:
+          name: gardena
+          property: connectionString
