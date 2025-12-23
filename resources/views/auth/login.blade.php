@@ -1,7 +1,8 @@
 @extends('base')
 @section('title')
     <title>Green Connect - Connexion</title>
-    @vite('resources/css/app.css')
+    <!-- @vite('resources/css/app.css') -->
+     <script src="https://cdn.tailwindcss.com"></script>
 @endsection
 @section('content')
     @include('homeNav')
